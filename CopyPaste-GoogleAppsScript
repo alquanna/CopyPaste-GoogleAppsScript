@@ -1,0 +1,41 @@
+/** 
+
+A Google Apps script for consolidating data from different sheets
+Basically, this scripts copies the contents from all sheets/tabs in a Google Sheet file, then consolidates all data in one tab: CombinedShet
+
+Created by Clara - claracommutes.com :)
+
+Important note:
+1. Before using this Google Apps script, make sure that you have a sheet named CombinedSheet in your Google Sheet. This is where the script will consolidate all the data from all the other sheets.
+2. CombinedSheet should be the last/rightmost tab in your Google Sheet file.
+3. If you want to change the name of CombinedSheet, make sure to change the value in Line 20.
+
+Enjoy!
+
+**/
+
+function myFunction() {
+  
+  var sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  var sheetrecord = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("CombinedSheet");
+  var i;
+  var sheetcount = sheets.length;
+  var sheetlimit = sheetcount - 1;
+  if (sheets.length > 1) {
+	for (i = 0; i < sheetlimit; i++) {
+      var sheetnames = sheets[i].getSheetName();
+      //Logger.log(sheetnames);
+      var SheetLastRow = sheets[i].getLastRow();
+      //Logger.log(SheetLastRow);
+      var SheetLastCol = sheets[i].getLastColumn();
+      //Logger.log(SheetLastCol);
+      var valuesSheetPull = sheets[i].getSheetValues(1, 1, SheetLastRow, SheetLastCol);
+      Logger.log(valuesSheetPull);
+      
+      var lastRow = sheetrecord.getLastRow();
+      var lastCol = sheetrecord.getLastColumn();
+      var range = sheetrecord.getRange(lastRow+1, 1, SheetLastRow, SheetLastCol);
+      range.setValues(valuesSheetPull);
+	}
+  }
+}
